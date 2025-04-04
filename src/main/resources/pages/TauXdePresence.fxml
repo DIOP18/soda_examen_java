@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+
+<AnchorPane prefHeight="525.0" prefWidth="742.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="misstech.sn.javafxprojet.controllers.TauxDePresenceController">
+   <children>
+      <StackPane layoutX="43.0" layoutY="14.0" prefHeight="371.0" prefWidth="521.0">
+         <children>
+            <PieChart fx:id="PieChartTauxPresence" prefHeight="337.0" prefWidth="521.0" />
+         </children>
+      </StackPane>
+      <Button layoutX="527.0" layoutY="440.0" mnemonicParsing="false" onAction="#OnReturn" text="X" />
+      <Button layoutX="424.0" layoutY="440.0" mnemonicParsing="false" onAction="#OnPDF" text="PDF" />
+   </children>
+</AnchorPane>

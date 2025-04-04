@@ -1,0 +1,73 @@
+/* Style de base pour la fenêtre */
+.root {
+    -fx-background-color: transparent;
+}
+
+/* Style pour le panneau de connexion */
+.anchor-pane {
+    -fx-background-color: #efe4ec;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(166, 95, 123, 0.3), 15, 0, 0, 5);
+    -fx-border-color: #a65f7b;
+    -fx-border-width: 1px;
+    -fx-border-radius: 15;
+}
+
+/* Style pour le titre */
+.label {
+    -fx-font-family: "Javanese Text";
+    -fx-text-fill: #a65f7b;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* Style pour les labels des champs (Email/Password) */
+.label:not(.title) {
+    -fx-font-family: "System";
+    -fx-text-fill: #5a5a5a;
+    -fx-font-size: 14px;
+}
+
+/* Style pour les champs de saisie */
+.text-field, .password-field {
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-border-color: #a65f7b;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5;
+    -fx-padding: 5px;
+    -fx-font-size: 14px;
+    -fx-pref-width: 200px;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #d49cb3;
+    -fx-effect: innershadow(three-pass-box, rgba(166, 95, 123, 0.3), 5, 0, 0, 0);
+}
+
+/* Style pour le bouton */
+.button {
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-border-color: #a65f7b;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5;
+    -fx-text-fill: #a65f7b;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #f0d8e1;
+}
+
+.button:pressed {
+    -fx-background-color: #e6c6d3;
+}
+
+/* Style pour l'image de fond */
+.image-view {
+    -fx-opacity: 0.9;
+}

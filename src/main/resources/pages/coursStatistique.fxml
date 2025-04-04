@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="misstech.sn.javafxprojet.controllers.CoursStatistiqueController">
+   <children>
+      <AnchorPane layoutX="-38.0" prefHeight="400.0" prefWidth="793.0" style="-fx-background-color: #cc91a1;">
+         <children>
+            <Button fx:id="exportPdfBtn" layoutX="260.0" layoutY="220.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="PDF" />
+            <Button layoutX="565.0" layoutY="258.0" mnemonicParsing="false" onAction="#OnReturn" text="X" />
+            <Button fx:id="exportExcelBtn" layoutX="414.0" layoutY="220.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="91.0" text="Excel" />
+            <Label layoutX="142.0" layoutY="145.0" text="DU" />
+            <Label layoutX="374.0" layoutY="145.0" text="AU" />
+            <DatePicker fx:id="dateFinPicker" layoutX="414.0" layoutY="141.0" />
+            <DatePicker fx:id="dateDebutPicker" layoutX="185.0" layoutY="141.0" />
+            <Label layoutX="174.0" layoutY="62.0" text="GENERATION DE RAPPORTS D'EMARGEMENTS" textAlignment="CENTER" textOverrun="LEADING_ELLIPSIS">
+               <font>
+                  <Font size="22.0" />
+               </font>
+               <opaqueInsets>
+                  <Insets top="10.0" />
+               </opaqueInsets>
+            </Label>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

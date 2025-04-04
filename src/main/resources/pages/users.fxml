@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="722.0" prefWidth="1333.0" stylesheets="@mainUser.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="misstech.sn.javafxprojet.controllers.UserController">
+   <children>
+      <AnchorPane prefHeight="722.0" prefWidth="1333.0" style="-fx-background-color: #cc91a1;" styleClass="main-pane">
+         <children>
+            <Label layoutX="52.0" layoutY="125.0" prefHeight="17.0" prefWidth="60.0" styleClass="form-label" text="Prenom">
+               <font>
+                  <Font size="15.0" />
+               </font></Label>
+            <Label layoutX="66.0" layoutY="174.0" styleClass="form-label" text="Nom">
+               <font>
+                  <Font size="15.0" />
+               </font></Label>
+            <Label layoutX="65.0" layoutY="228.0" styleClass="form-label" text="Email">
+               <font>
+                  <Font size="15.0" />
+               </font></Label>
+            <Label layoutX="29.0" layoutY="281.0" prefHeight="20.0" prefWidth="131.0" styleClass="form-label" text="Mots de passe">
+               <font>
+                  <Font size="15.0" />
+               </font></Label>
+            <Label layoutX="68.0" layoutY="333.0" styleClass="form-label" text="Role">
+               <font>
+                  <Font size="15.0" />
+               </font></Label>
+            <TextField fx:id="txtPrenom" layoutX="145.0" layoutY="118.0" prefHeight="34.0" prefWidth="121.0" styleClass="input-field" />
+            <TextField fx:id="txtNom" layoutX="145.0" layoutY="167.0" prefHeight="34.0" prefWidth="121.0" styleClass="input-field" />
+            <TextField fx:id="txtEmail" layoutX="145.0" layoutY="221.0" prefHeight="34.0" prefWidth="121.0" styleClass="input-field" />
+            <PasswordField fx:id="pwfMotDPasse" layoutX="145.0" layoutY="274.0" prefHeight="34.0" prefWidth="121.0" styleClass="input-field" />
+            <ComboBox fx:id="cmbRole" accessibleText="Selectionnez une role" layoutX="144.0" layoutY="326.0" prefHeight="34.0" prefWidth="121.0" styleClass="combo-box" />
+            <TextField fx:id="txtId" layoutX="152.0" layoutY="1.0" prefHeight="25.0" prefWidth="47.0" styleClass="input-field" visible="false" />
+            <TableView fx:id="UserTable" layoutX="292.0" layoutY="128.0" onMouseClicked="#getRecharge" prefHeight="296.0" prefWidth="741.0" styleClass="table-view">
+              <columns>
+                <TableColumn fx:id="colId" prefWidth="28.6666259765625" text="Id" />
+                <TableColumn fx:id="colprenom" prefWidth="91.33331298828125" text="Prenom" />
+                  <TableColumn fx:id="colnom" prefWidth="78.00003051757812" text="Nom" />
+                  <TableColumn fx:id="colEmail" prefWidth="190.666748046875" text="Email" />
+                  <TableColumn fx:id="colPassword" minWidth="0.0" prefWidth="169.99993896484375" text="Password" />
+                  <TableColumn fx:id="colRole" prefWidth="181.33331298828125" text="Role" />
+              </columns>
+            </TableView>
+            <Button layoutX="134.0" layoutY="390.0" mnemonicParsing="false" onAction="#onSave" prefHeight="34.0" prefWidth="131.0" text="Enregistrer" />
+            <Button layoutX="375.0" layoutY="443.0" mnemonicParsing="false" onAction="#onEdit" prefHeight="34.0" prefWidth="177.0" text="Modifier" />
+            <Button layoutX="609.0" layoutY="443.0" mnemonicParsing="false" onAction="#onDelete" prefHeight="34.0" prefWidth="177.0" text="Supprimer" />
+            <Button layoutX="1083.0" layoutY="544.0" mnemonicParsing="false" onAction="#onReturn" style="-fx-background-color: #FF0004;" styleClass="logout-button" text="DECONNEXION">
+               <font>
+                  <Font size="14.0" />
+               </font></Button>
+            <Label layoutX="464.0" layoutY="49.0" prefHeight="35.0" prefWidth="315.0" styleClass="main-title" text="GESTION UTILISATEURS" textFill="WHITE" underline="true">
+               <font>
+                  <Font size="27.0" />
+               </font>
+            </Label>
+            <Button layoutX="160.0" layoutY="544.0" mnemonicParsing="false" onAction="#OnTableaudeBord" prefHeight="47.0" prefWidth="262.0" text="Retour au Tableau de bord" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

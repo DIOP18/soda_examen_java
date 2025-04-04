@@ -1,0 +1,102 @@
+/* Fond principal */
+.root {
+    -fx-background-color: #f8f1f3;
+}
+
+/* Panneau principal */
+.main-pane {
+    -fx-background-color: linear-gradient(to bottom, #cc91a1, #d9a7b8);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+
+/* Titre principal */
+.main-title {
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-size: 28px;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0, 0, 1);
+}
+
+/* Labels de formulaire */
+.form-label {
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 14px;
+    -fx-text-fill: #4a2a35;
+}
+
+/* Champs de saisie */
+.input-field {
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-border-color: #b37d8d;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5;
+    -fx-padding: 8px;
+    -fx-font-size: 14px;
+}
+
+.input-field:focused {
+    -fx-border-color: #9e5d72;
+    -fx-effect: innershadow(gaussian, rgba(158,93,114,0.2), 5, 0, 0, 0);
+}
+
+/* ComboBox */
+.combo-box {
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-border-color: #b37d8d;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5;
+    -fx-pref-height: 34px;
+}
+
+/* TableView */
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #b37d8d;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5;
+}
+
+.table-view .column-header {
+    -fx-background-color: #cc91a1;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #f9f2f4;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #e6c6d3;
+}
+
+/* Boutons standards */
+.button {
+    -fx-background-color: #9e5d72;
+    -fx-background-radius: 5;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 8px 16px;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #8c4a63;
+}
+
+.button:pressed {
+    -fx-background-color: #7a3a53;
+}
+
+/* Bouton spécial (déconnexion) */
+.logout-button {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+}
+
+.logout-button:hover {
+    -fx-background-color: #c0392b;
+}

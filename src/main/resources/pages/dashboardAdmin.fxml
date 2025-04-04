@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="593.0" prefWidth="655.0" styleClass="anchor-pane" stylesheets="@mainUser.css"
+            xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="misstech.sn.javafxprojet.controllers.dashboardAdminController">
+   <HBox alignment="CENTER" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="20">
+      <Label text="Tableau de Bord Administrateur" styleClass="title"/>
+   </HBox>
+   <VBox alignment="CENTER" spacing="20" AnchorPane.topAnchor="50" AnchorPane.bottomAnchor="50"
+         AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50">
+      <Button mnemonicParsing="false" onAction="#OpenUsers"
+              prefHeight="45.0" prefWidth="250.0" text="GESTION DES UTILISATEURS"
+              styleClass="button"/>
+      <Button mnemonicParsing="false" onAction="#OpenSalles"
+              prefHeight="45.0" prefWidth="250.0" text="GESTION DES SALLES"
+              styleClass="button"/>
+   </VBox>
+</AnchorPane>
