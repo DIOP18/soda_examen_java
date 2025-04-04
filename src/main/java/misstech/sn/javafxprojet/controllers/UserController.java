@@ -87,6 +87,15 @@ public class UserController implements Initializable {
             showAlert("Erreur", "Veuillez entrer une adresse email valide (ex: soda@gmail.com ou contact@misstech.sn)", Alert.AlertType.ERROR);
             return false;
         }
+        if (pwfMotDPasse.getText().length() < 8) {
+            showAlert("Erreur", "Le mot de passe doit contenir au moins 8 caractères", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        if (cmbRole.getValue() == null) {
+            showAlert("Erreur", "Veuillez sélectionner un rôle", Alert.AlertType.ERROR);
+            return false;
+        }
 
         return true;
     }
@@ -101,6 +110,24 @@ public class UserController implements Initializable {
     @FXML
     void onSave(ActionEvent event) {
         if (validateInputs()) {
+            // Vérifier si l'email existe déjà
+            boolean emailExists = user.getAll().stream()
+                    .anyMatch(u -> u.getEmail().equalsIgnoreCase(txtEmail.getText()));
+
+            if (emailExists) {
+                showAlert("Erreur", "Cet email est déjà utilisé par un autre utilisateur", Alert.AlertType.ERROR);
+                return;
+            }
+
+            // Vérifier si le mot de passe existe déjà
+            boolean passwordExists = user.getAll().stream()
+                    .anyMatch(u -> u.getPassword().equals(pwfMotDPasse.getText()));
+
+            if (passwordExists) {
+                showAlert("Erreur", "Ce mot de passe est déjà utilisé par un autre utilisateur", Alert.AlertType.ERROR);
+                return;
+            }
+
             Users NouveauUser = new Users(
                     txtNom.getText(),
                     txtPrenom.getText(),
@@ -110,7 +137,7 @@ public class UserController implements Initializable {
             );
 
             user.add(NouveauUser);
-            showAlert("Succes","Utilisateur ajouté avec succes", Alert.AlertType.INFORMATION);
+            showAlert("Succès", "Utilisateur ajouté avec succès", Alert.AlertType.INFORMATION);
             refreshTable();
             clear();
         }
@@ -153,7 +180,6 @@ public class UserController implements Initializable {
     void onDelete(ActionEvent event) {
         Users selectionUtil = UserTable.getSelectionModel().getSelectedItem();
         if (selectionUtil != null) {
-            // Vérifier si l'utilisateur est un professeur lié à des émargements ou cours
             if (selectionUtil.getRole() == Role.PROFESSEUR) {
                 if (isProfessorAssociatedWithRecords(selectionUtil.getId())) {
                     showAlert("ERREUR",
@@ -198,13 +224,38 @@ public class UserController implements Initializable {
     @FXML
     void onEdit(ActionEvent event) {
         if (validateInputs()) {
-            Users selectUtil = (Users) UserTable.getSelectionModel().getSelectedItem();
+            Users selectUtil = UserTable.getSelectionModel().getSelectedItem();
             if (selectUtil != null) {
+                // Vérifier si l'email a changé et existe déjà
+                if (!selectUtil.getEmail().equals(txtEmail.getText())) {
+                    boolean emailExists = user.getAll().stream()
+                            .anyMatch(u -> u.getEmail().equalsIgnoreCase(txtEmail.getText())
+                                    && u.getId() != selectUtil.getId());
+
+                    if (emailExists) {
+                        showAlert("Erreur", "Cet email est déjà utilisé par un autre utilisateur", Alert.AlertType.ERROR);
+                        return;
+                    }
+                }
+
+                // Vérifier si le mot de passe a changé et existe déjà
+                if (!selectUtil.getPassword().equals(pwfMotDPasse.getText())) {
+                    boolean passwordExists = user.getAll().stream()
+                            .anyMatch(u -> u.getPassword().equals(pwfMotDPasse.getText())
+                                    && u.getId() != selectUtil.getId());
+
+                    if (passwordExists) {
+                        showAlert("Erreur", "Ce mot de passe est déjà utilisé par un autre utilisateur", Alert.AlertType.ERROR);
+                        return;
+                    }
+                }
+
                 selectUtil.setNom(txtNom.getText());
                 selectUtil.setPrenom(txtPrenom.getText());
                 selectUtil.setEmail(txtEmail.getText());
                 selectUtil.setPassword(pwfMotDPasse.getText());
                 selectUtil.setRole(cmbRole.getValue());
+
                 user.update(selectUtil);
                 showAlert("Succès", "Utilisateur modifié avec succès", Alert.AlertType.INFORMATION);
                 refreshTable();
@@ -213,18 +264,7 @@ public class UserController implements Initializable {
         }
 
     }
-    @FXML
-    void onReturn(ActionEvent event) {
-        try {
 
-            Parent dashboardView = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/pages/ConnectionPage.fxml")));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(dashboardView));
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

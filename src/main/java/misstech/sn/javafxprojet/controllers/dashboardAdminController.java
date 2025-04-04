@@ -13,7 +13,15 @@ import java.util.Objects;
 public class dashboardAdminController {
     @FXML
     void OpenSalles(ActionEvent event) {
+        try {
 
+            Parent dashboardView = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/pages/salle.fxml")));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(dashboardView));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -28,6 +36,19 @@ public class dashboardAdminController {
             e.printStackTrace();
         }
 
+
+    }
+    @FXML
+    void onReturn(ActionEvent event) {
+        try {
+
+            Parent dashboardView = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/pages/ConnectionPage.fxml")));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(dashboardView));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 }

@@ -53,10 +53,6 @@
             <Button layoutX="134.0" layoutY="390.0" mnemonicParsing="false" onAction="#onSave" prefHeight="34.0" prefWidth="131.0" text="Enregistrer" />
             <Button layoutX="375.0" layoutY="443.0" mnemonicParsing="false" onAction="#onEdit" prefHeight="34.0" prefWidth="177.0" text="Modifier" />
             <Button layoutX="609.0" layoutY="443.0" mnemonicParsing="false" onAction="#onDelete" prefHeight="34.0" prefWidth="177.0" text="Supprimer" />
-            <Button layoutX="1083.0" layoutY="544.0" mnemonicParsing="false" onAction="#onReturn" style="-fx-background-color: #FF0004;" styleClass="logout-button" text="DECONNEXION">
-               <font>
-                  <Font size="14.0" />
-               </font></Button>
             <Label layoutX="464.0" layoutY="49.0" prefHeight="35.0" prefWidth="315.0" styleClass="main-title" text="GESTION UTILISATEURS" textFill="WHITE" underline="true">
                <font>
                   <Font size="27.0" />

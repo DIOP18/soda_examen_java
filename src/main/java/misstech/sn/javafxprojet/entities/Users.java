@@ -15,13 +15,15 @@ public class Users {
 
     private String nom;
     private String prenom;
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false, unique = true)
     private String password;
 
-    @Enumerated(EnumType.STRING) // Utilisation de l'énumération
+    @Enumerated(EnumType.STRING)
     private Role role;
-    @OneToMany(mappedBy = "professeur")
-    private List<Emargement> emargements;
+
 
     // Constructeurs
     public Users() {}
