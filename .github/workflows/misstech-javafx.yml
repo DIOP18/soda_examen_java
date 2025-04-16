@@ -1,0 +1,117 @@
+name: JavaFX Build and Deploy
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  release:
+    types: [ created ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        java: [21]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+
+      - name: Run tests
+        run: mvn test
+
+      - name: Create JAR package
+        run: mvn package shade:shade
+
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.os }}-jar-artifact
+          path: target/javafx-projet-1.0-SNAPSHOT.jar
+
+      - name: Create JLink runtime image
+        run: mvn javafx:jlink
+
+      - name: Upload JLink artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.os }}-jlink-artifact
+          path: target/app
+
+  # Job pour mettre à jour l'image Docker
+  docker:
+    needs: build
+    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download JAR artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ubuntu-latest-jar-artifact
+          path: target/
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/javafx-projet:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/javafx-projet:${{ github.sha }}
+
+  # Création d'une release GitHub avec les exécutables
+  create-release:
+    needs: build
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Package Windows artifact
+        run: |
+          cd windows-latest-jlink-artifact
+          zip -r ../javafx-projet-windows.zip .
+          cd ../windows-latest-jar-artifact
+          cp javafx-projet-1.0-SNAPSHOT.jar ../javafx-projet-windows.jar
+
+      - name: Package Linux artifact
+        run: |
+          cd ubuntu-latest-jlink-artifact
+          tar -czvf ../javafx-projet-linux.tar.gz .
+          cd ../ubuntu-latest-jar-artifact
+          cp javafx-projet-1.0-SNAPSHOT.jar ../javafx-projet-linux.jar
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            javafx-projet-windows.zip
+            javafx-projet-windows.jar
+            javafx-projet-linux.tar.gz
+            javafx-projet-linux.jar
