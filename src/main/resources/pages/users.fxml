@@ -58,7 +58,6 @@
                   <Font size="27.0" />
                </font>
             </Label>
-            <Button layoutX="160.0" layoutY="544.0" mnemonicParsing="false" onAction="#OnTableaudeBord" prefHeight="47.0" prefWidth="262.0" text="Retour au Tableau de bord" />
          </children>
       </AnchorPane>
    </children>

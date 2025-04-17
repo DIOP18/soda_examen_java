@@ -38,6 +38,8 @@ public class EmargementController implements Initializable {
     private EntityManagerFactory emf;
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     private final DateTimeFormatter displayTimeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+    @FXML
+    private Button BtnDeconnexion;
 
 
     @FXML
@@ -85,6 +87,12 @@ public class EmargementController implements Initializable {
     public void setConnectedUser(Users user) {
         this.connectedUser = user;
         loadConnectedProfesseur();
+    }
+    public void cacherBoutonDeconnexion() {
+        if (BtnDeconnexion != null) {
+            BtnDeconnexion.setVisible(false);
+            BtnDeconnexion.setManaged(false);
+        }
     }
 
 
@@ -146,6 +154,8 @@ public class EmargementController implements Initializable {
         }
         return heure;
     }
+
+
     @FXML
     void OnReturn(ActionEvent event) {
         try {
@@ -328,8 +338,14 @@ public class EmargementController implements Initializable {
     private void loadAllEmargements() {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Emargement> query = em.createQuery("SELECT e FROM Emargement e ORDER BY e.date DESC, e.heureActuelle DESC", Emargement.class);
+            TypedQuery<Emargement> query = em.createQuery(
+                    "SELECT e FROM Emargement e WHERE e.professeur = :prof ORDER BY e.date DESC, e.heureActuelle DESC",
+                    Emargement.class
+            );
+            query.setParameter("prof", connectedUser);
+
             List<Emargement> emargements = query.getResultList();
+
             tableEmargement.getItems().clear();
             tableEmargement.getItems().addAll(emargements);
         } catch (Exception e) {
@@ -491,22 +507,15 @@ public class EmargementController implements Initializable {
             }
         });
         tableEmargement.getItems().clear();
-        colId.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getId()));
-        colDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDate()));
-        colProf.setCellValueFactory(data -> new SimpleStringProperty(
-                data.getValue().getProfesseur().getNom() + " " + data.getValue().getProfesseur().getPrenom()));
-        colCours.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCours().getNom()));
-        colHeureEmargement.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getHeureEmargement()));
-        colHeureActuelle.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getHeureActuelle()));
         dtDate.setValue(LocalDate.now());
         tfStatut.setText("Present");
         LocalTime heureActuelle = LocalTime.now();
         tfHeureActuelle.setText(heureActuelle.format(timeFormatter));
         dtDate.setEditable(false);
         setupCoursComboBox();
-
-        tfHeureFiltre.setOnAction(event -> OnConsulterEmargemment(event));
         loadAllEmargements();
+        tfHeureFiltre.setOnAction(event -> OnConsulterEmargemment(event));
         System.out.println("Initialisation de l'interface d'émargement terminée");
+
     }
 }

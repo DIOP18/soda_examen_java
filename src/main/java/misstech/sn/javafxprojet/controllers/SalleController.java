@@ -59,18 +59,7 @@ public class SalleController {
         }
     }
 
-    @FXML
-    void OnTableaudbord(ActionEvent event) {
-        try {
 
-            Parent dashboardView = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/pages/dashboardAdmin.fxml")));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(dashboardView));
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @FXML
     void OnEnreg(ActionEvent event) {

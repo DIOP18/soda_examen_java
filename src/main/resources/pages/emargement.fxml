@@ -38,7 +38,7 @@
             <Font size="14.0" />
          </font></TextField>
       <TextField fx:id="tfStatut" disable="true" layoutX="180.0" layoutY="214.0" prefHeight="34.0" prefWidth="121.0" styleClass="input-field" text="PRESENT" />
-      <Button layoutX="892.0" layoutY="473.0" mnemonicParsing="false" onAction="#OnReturn" style="-fx-background-color: #FF0004;" text="DECONNEXION">
+      <Button fx:id="BtnDeconnexion" layoutX="892.0" layoutY="473.0" mnemonicParsing="false" onAction="#OnReturn" style="-fx-background-color: #FF0004;" text="DECONNEXION">
          <font>
             <Font size="14.0" />
          </font></Button>

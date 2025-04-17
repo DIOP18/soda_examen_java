@@ -272,20 +272,4 @@ public class UserController implements Initializable {
         refreshTable();
 
     }
-    @FXML
-    void OnTableaudeBord(ActionEvent event) {
-        try {
-
-            Parent dashboardView = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/pages/dashboardAdmin.fxml")));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(dashboardView));
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-
-
-    }
 }
