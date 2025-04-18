@@ -25,8 +25,10 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Build and test with Maven
-        run: mvn -B verify
+      - name: Build with Maven
+        run: |
+          mvn -B clean package
+          mvn -B javafx:jlink -Djavafx.verbose=true
 
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
@@ -34,10 +36,6 @@ jobs:
           name: ${{ matrix.os }}-app
           path: target/*.jar
           retention-days: 5
-
-      - name: Create JLink image
-        if: matrix.os == 'ubuntu-latest'
-        run: mvn javafx:jlink
 
       - name: Upload JLink image
         if: matrix.os == 'ubuntu-latest'
@@ -59,6 +57,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ubuntu-latest-app
+          path: target
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -73,5 +72,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/javafx-app:latest

@@ -27,9 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -40,8 +38,6 @@ public class EmargementController implements Initializable {
     private final DateTimeFormatter displayTimeFormatter = DateTimeFormatter.ofPattern("HH:mm");
     @FXML
     private Button BtnDeconnexion;
-
-
     @FXML
     private ComboBox<Cours> cmbCours;
 
@@ -87,7 +83,9 @@ public class EmargementController implements Initializable {
     public void setConnectedUser(Users user) {
         this.connectedUser = user;
         loadConnectedProfesseur();
+        loadAllEmargements();
     }
+
     public void cacherBoutonDeconnexion() {
         if (BtnDeconnexion != null) {
             BtnDeconnexion.setVisible(false);
@@ -101,8 +99,6 @@ public class EmargementController implements Initializable {
 
     @FXML
     private TextField tfStatut;
-
-
 
 
     @FXML
@@ -137,6 +133,7 @@ public class EmargementController implements Initializable {
             e.printStackTrace();
         }
     }
+
     private String formatHeure(String heure) {
         if (heure == null || heure.trim().isEmpty()) {
             return null;
@@ -168,6 +165,7 @@ public class EmargementController implements Initializable {
         }
 
     }
+
     private List<Emargement> getEmargements(LocalTime filtreHeure, LocalDate filtreDate) {
         EntityManager em = emf.createEntityManager();
         List<Emargement> emargements;
@@ -188,7 +186,6 @@ public class EmargementController implements Initializable {
             }
 
             List<Emargement> resultats = query.getResultList();
-
 
 
             // Filtrer par heure si une heure est spécifiée
@@ -247,6 +244,7 @@ public class EmargementController implements Initializable {
 
         return true;
     }
+
     private void showAlert(String title, String content, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -307,6 +305,10 @@ public class EmargementController implements Initializable {
 
     private void refreshTableView() {
         try {
+            // Ajout d'un message de débogage
+            System.out.println("DEBUG - refreshTableView, connectedUser: " +
+                    (connectedUser != null ? connectedUser.getNom() : "null"));
+
             LocalDate filtreDate = dtDateFiltre != null ? dtDateFiltre.getValue() : null;
             LocalTime filtreHeure = null;
 
@@ -315,7 +317,6 @@ public class EmargementController implements Initializable {
                     String heureFiltre = formatHeure(tfHeureFiltre.getText().trim());
                     filtreHeure = LocalTime.parse(heureFiltre);
                 } catch (DateTimeParseException e) {
-                    // En cas d'erreur de parsing, on ignore le filtre d'heure
                     System.err.println("Erreur de parsing d'heure: " + e.getMessage());
                 }
             }
@@ -323,37 +324,44 @@ public class EmargementController implements Initializable {
             // Si des filtres sont actifs, les appliquer
             if (filtreHeure != null || filtreDate != null) {
                 List<Emargement> emargements = getEmargements(filtreHeure, filtreDate);
+                System.out.println("DEBUG - refreshTableView avec filtres: " + emargements.size() + " émargements");
                 tableEmargement.getItems().clear();
                 tableEmargement.getItems().addAll(emargements);
             } else {
-                // Sinon, charger tous les émargements
+                // Sinon, charger tous les émargements (filtrés par professeur si applicable)
+                System.out.println("DEBUG - refreshTableView sans filtres");
                 loadAllEmargements();
             }
         } catch (Exception e) {
+            System.err.println("Erreur dans refreshTableView: " + e.getMessage());
             e.printStackTrace();
-            // En cas d'erreur, essayer de charger tous les émargements
             loadAllEmargements();
         }
     }
+
     private void loadAllEmargements() {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Emargement> query = em.createQuery(
-                    "SELECT e FROM Emargement e WHERE e.professeur = :prof ORDER BY e.date DESC, e.heureActuelle DESC",
-                    Emargement.class
-            );
-            query.setParameter("prof", connectedUser);
+            String jpql;
+            Map<String, Object> params = new HashMap<>();
+
+            if (connectedUser != null && connectedUser.getRole() == Role.PROFESSEUR) {
+                jpql = "SELECT e FROM Emargement e WHERE e.professeur.id = :profId ORDER BY e.date DESC, e.heureActuelle DESC";
+                params.put("profId", connectedUser.getId());
+            } else {
+                jpql = "SELECT e FROM Emargement e ORDER BY e.date DESC, e.heureActuelle DESC";
+            }
+
+            TypedQuery<Emargement> query = em.createQuery(jpql, Emargement.class);
+            params.forEach(query::setParameter);
 
             List<Emargement> emargements = query.getResultList();
-
-            tableEmargement.getItems().clear();
-            tableEmargement.getItems().addAll(emargements);
-        } catch (Exception e) {
-            e.printStackTrace();
+            tableEmargement.getItems().setAll(emargements);
         } finally {
             em.close();
         }
     }
+
     private boolean checkEmargementExists(Users prof, Cours cours, LocalDate date) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("PERSISTENCE");
         EntityManager em = emf.createEntityManager();
@@ -371,6 +379,7 @@ public class EmargementController implements Initializable {
             emf.close();
         }
     }
+
     public void loadConnectedProfesseur() {
         // Si l'utilisateur n'est pas encore initialisé, ne rien faire
         if (connectedUser == null) return;
@@ -451,6 +460,7 @@ public class EmargementController implements Initializable {
             }
         });
     }
+
     private void loadCoursForProfesseur(Users professeur) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("PERSISTENCE");
         EntityManager em = emf.createEntityManager();
@@ -472,11 +482,14 @@ public class EmargementController implements Initializable {
     }
 
 
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         emf = Persistence.createEntityManagerFactory("PERSISTENCE");
+
+        // Ajout d'un message de débogage pour voir l'état au démarrage
+        System.out.println("DEBUG - initialize: connectedUser = " +
+                (connectedUser != null ? connectedUser.getNom() : "null"));
+
         // Dans la méthode initialize(), ajoutez:
         if (dtDateFiltre != null) {
             // Par défaut, pas de date sélectionnée pour le filtre
@@ -491,7 +504,7 @@ public class EmargementController implements Initializable {
         }
         tfHeureFiltre.setText(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
 
-// Ajoutez un écouteur pour formatter automatiquement lors de la perte de focus
+        // Ajoutez un écouteur pour formatter automatiquement lors de la perte de focus
         tfHeureFiltre.focusedProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) {  // Quand le champ perd le focus
                 try {
@@ -507,15 +520,25 @@ public class EmargementController implements Initializable {
             }
         });
         tableEmargement.getItems().clear();
+        colId.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getId()));
+        colDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDate()));
+        colProf.setCellValueFactory(data -> new SimpleStringProperty(
+                data.getValue().getProfesseur().getNom() + " " + data.getValue().getProfesseur().getPrenom()));
+        colCours.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCours().getNom()));
+        colHeureEmargement.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getHeureEmargement()));
+        colHeureActuelle.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getHeureActuelle()));
         dtDate.setValue(LocalDate.now());
         tfStatut.setText("Present");
         LocalTime heureActuelle = LocalTime.now();
         tfHeureActuelle.setText(heureActuelle.format(timeFormatter));
         dtDate.setEditable(false);
         setupCoursComboBox();
-        loadAllEmargements();
-        tfHeureFiltre.setOnAction(event -> OnConsulterEmargemment(event));
-        System.out.println("Initialisation de l'interface d'émargement terminée");
 
+        tfHeureFiltre.setOnAction(event -> OnConsulterEmargemment(event));
+
+        // Appel à loadAllEmargements
+        loadAllEmargements();
+
+        System.out.println("Initialisation de l'interface d'émargement terminée");
     }
 }
